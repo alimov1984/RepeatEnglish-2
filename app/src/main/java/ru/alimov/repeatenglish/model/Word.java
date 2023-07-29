@@ -85,7 +85,17 @@ public class Word {
         return this.correctCheckCounter;
     }
 
+    public long setCorrectCheckCounter(long correctCheckCounter) {
+        this.correctCheckCounter = correctCheckCounter;
+        return this.correctCheckCounter;
+    }
+
     public long getIncorrectCheckCounter() {
+        return this.incorrectCheckCounter;
+    }
+
+    public long setIncorrectCheckCounter(long incorrectCheckCounter) {
+        this.incorrectCheckCounter = incorrectCheckCounter;
         return this.incorrectCheckCounter;
     }
 

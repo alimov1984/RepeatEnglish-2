@@ -1,19 +1,27 @@
 package ru.alimov.repeatenglish.service;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+
+import androidx.preference.PreferenceManager;
 
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import ru.alimov.repeatenglish.model.Word;
 import ru.alimov.repeatenglish.repository.WordRepository;
 
 public class WordServiceImpl implements WordService {
+
+    private static final int DEFAULT_WORD_CHECKING_COUNT = 10;
+    Context context;
     private WordRepository wordRepository;
 
     public WordServiceImpl(Context context) {
+        this.context = context;
         this.wordRepository = new WordRepository(context);
     }
 
@@ -47,6 +55,50 @@ public class WordServiceImpl implements WordService {
             }
         }
         return result;
+    }
+
+    public List<Word> getWordsForChecking() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        int wordCount = prefs.getInt("word_checking_count", DEFAULT_WORD_CHECKING_COUNT);
+        List<Word> wordList = wordRepository.getWordsForChecking(10);
+        return wordList;
+    }
+
+    public boolean incrementCorrectCheckCounter(String wordOriginal) {
+        Word word = wordRepository.getWordByOriginal(wordOriginal);
+        if (word != null) {
+            word.setCorrectCheckCounter(word.getCorrectCheckCounter() + 1);
+            word.setRating(getRatingValue(word));
+            Optional<Integer> result = wordRepository.incrementWordCorrectCheckCounter(word);
+            if (result.isPresent() && result.get() > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean incrementIncorrectCheckCounter(String wordOriginal) {
+        Word word = wordRepository.getWordByOriginal(wordOriginal);
+        if (word != null) {
+            word.setIncorrectCheckCounter(word.getIncorrectCheckCounter() + 1);
+            word.setRating(getRatingValue(word));
+            Optional<Integer> result = wordRepository.incrementWordIncorrectCheckCounter(word);
+            if (result.isPresent() && result.get() > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean updateDateShowed(String wordOriginal) {
+        Word word = wordRepository.getWordByOriginal(wordOriginal);
+        if (word != null) {
+            Optional<Integer> result = wordRepository.updateWordDateShowed(word);
+            if (result.isPresent() && result.get() > 0) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private long getRatingValue(Word word) {

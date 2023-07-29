@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <EditTextPreference
+        android:key="word_checking_count"
+        android:summary="Количество слов при проверке"
+        android:title="Количество слов при проверке"
+        android:inputType="numberDecimal"
+        android:digits="0123456789"
+        />
+</PreferenceScreen>
