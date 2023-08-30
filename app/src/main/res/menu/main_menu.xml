@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_word_add"
+        android:icon="@drawable/plus"
+        android:title="Add word" />
+    <item
+        android:id="@+id/menu_word_check"
+        android:icon="@drawable/check_yourself"
+        android:title="Check yourself" />
+    <item
+        android:id="@+id/menu_settings"
+        android:icon="@drawable/my_settings"
+        android:title="Settings" />
+</menu>
