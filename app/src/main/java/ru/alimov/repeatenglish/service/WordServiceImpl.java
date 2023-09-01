@@ -49,7 +49,7 @@ public class WordServiceImpl implements WordService {
                     0,
                     0);
             newWord.setRating(getRatingValue(newWord));
-            Optional<Long> insertResult = wordRepository.insertWord(word);
+            Optional<Long> insertResult = wordRepository.insertWord(newWord);
             if (insertResult.isPresent() && insertResult.get() > 0) {
                 result = "Insert word successfully:";
             }

@@ -56,7 +56,7 @@ public class WordRepository {
     public Word getWordByOriginal(String wordOriginal) {
         String sql = "SELECT id, word_original, word_translated, dateCreated, dateUpdated,"
                 + "dateShowed, add_counter, correct_check_counter, incorrect_check_counter, rating"
-                + "FROM [word_dictionary] WHERE word_original = ?";
+                + " FROM [word_dictionary] WHERE word_original = ?";
         Word word = database.getObject(sql, this::wordConstructor, new String[]{wordOriginal});
         return word;
     }
