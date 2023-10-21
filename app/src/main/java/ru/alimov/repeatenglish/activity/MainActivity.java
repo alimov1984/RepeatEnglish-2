@@ -2,6 +2,7 @@ package ru.alimov.repeatenglish.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -60,10 +61,14 @@ public class MainActivity extends AppCompatActivity {
         int menuItemId = item.getItemId();
         switch (menuItemId) {
             case R.id.menu_word_check:
-                Toast.makeText(this, "menu_word_check", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, CheckActivity.class);
+                startActivity(intent);
+                //Toast.makeText(this, "menu_word_check", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.menu_settings:
-                Toast.makeText(this, "my_settings", Toast.LENGTH_SHORT).show();
+                Intent intent2 = new Intent(this, SettingsActivity.class);
+                startActivity(intent2);
+                //Toast.makeText(this, "my_settings", Toast.LENGTH_SHORT).show();
                 return true;
         }
         return super.onOptionsItemSelected(item);

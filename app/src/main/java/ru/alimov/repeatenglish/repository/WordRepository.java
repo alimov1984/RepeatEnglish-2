@@ -67,7 +67,7 @@ public class WordRepository {
         cv.put("word_translated", word.getWordTranslated().replace(",",""));
         cv.put("dateCreated", word.getDateCreated().toEpochMilli());
         cv.put("dateUpdated", word.getDateUpdated().toEpochMilli());
-        cv.put("dateShowed", word.getDateUpdated().toEpochMilli());
+        cv.putNull("dateShowed");
         cv.put("add_counter", word.getAddCounter());
         cv.put("correct_check_counter", word.getCorrectCheckCounter());
         cv.put("incorrect_check_counter", word.getIncorrectCheckCounter());
@@ -122,7 +122,7 @@ public class WordRepository {
     public Optional<Integer> incrementWordIncorrectCheckCounter(Word word)
     {
         ContentValues cv = new ContentValues();
-        cv.put("incorrect_check_counter", word.getCorrectCheckCounter());
+        cv.put("incorrect_check_counter", word.getIncorrectCheckCounter());
         cv.put("rating", word.getRating());
         Optional<Integer> affectedRows = database.updateRow(DICTIONARY_TABLE_NAME,
                 PRIMARY_COLUMN_ID, word.getId(), cv);

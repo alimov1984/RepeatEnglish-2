@@ -7,12 +7,15 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import ru.alimov.repeatenglish.R;
+import ru.alimov.repeatenglish.service.WordService;
+import ru.alimov.repeatenglish.service.WordServiceImpl;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,6 +26,8 @@ public class WordCardFragment extends Fragment {
 
     private String question;
     private String answer;
+
+    private WordService wordService;
 
     public WordCardFragment() {
         // Required empty public constructor
@@ -48,18 +53,34 @@ public class WordCardFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        wordService = new WordServiceImpl(this.getContext());
         if (getArguments() != null) {
-            question = getArguments().getString(WORD_CARD_QUESTION, "");
-            answer = getArguments().getString(WORD_CARD_ANSWER, "");
+            Bundle args = getArguments();
+            this.question = args.getString(WORD_CARD_QUESTION, "");
+            this.answer = args.getString(WORD_CARD_ANSWER, "");
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View result = inflater.inflate(R.layout.fragment_word_card, container, false);
-        TextView word_card_question = result.findViewById(R.id.word_card_question);
-        word_card_question.setText(question);
-        return result;
+        Log.d("WordCardFragment", "onCreateView");
+        View resultView = inflater.inflate(R.layout.fragment_word_card, container, false);
+        TextView word_card_question = resultView.findViewById(R.id.word_card_question);
+        word_card_question.setText(this.question);
+        return resultView;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        Log.d("WordCardFragment", "onViewCreated");
+        TextView word_card_question = view.findViewById(R.id.word_card_question);
+        word_card_question.setText(this.question);
+
+        word_card_question.setOnClickListener(view2 -> {
+            CheckingDialog checkingDialog = CheckingDialog.newInstance(question, answer);
+            checkingDialog.show(getActivity().getSupportFragmentManager(), "checkingDialog");
+        });
+        //wordService.updateDateShowed(this.question);
     }
 }

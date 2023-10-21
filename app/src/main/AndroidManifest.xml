@@ -12,10 +12,7 @@
         android:theme="@style/Theme.RepeatEnglish"
         tools:targetApi="31">
         <activity
-            android:name=".CheckActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity"
+            android:name="ru.alimov.repeatenglish.activity.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,7 +21,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".setting.SettingsActivity"
+            android:name="ru.alimov.repeatenglish.activity.CheckActivity"
+            android:exported="false" />
+        <activity
+            android:name="ru.alimov.repeatenglish.activity.SettingsActivity"
             android:exported="false" />
     </application>
 

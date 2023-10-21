@@ -4,7 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -36,7 +40,36 @@ public class CheckActivity extends AppCompatActivity {
         TabLayout tabLayout = findViewById(R.id.tab_layout);
 
         TabLayoutMediator tabLayoutMediator = new TabLayoutMediator(tabLayout, word_pager,
-                (tab, position) -> tab.setText((position + 1)));
+                new TabLayoutMediator.TabConfigurationStrategy(){
+                    @Override
+                    public void onConfigureTab(TabLayout.Tab tab, int position) {
+                        tab.setText("Word " + (position + 1));
+                    }
+                });
         tabLayoutMediator.attach();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int menuItemId = item.getItemId();
+        switch (menuItemId) {
+            case R.id.menu_word_add:
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.menu_settings:
+                Intent intent2 = new Intent(this, SettingsActivity.class);
+                startActivity(intent2);
+                //Toast.makeText(this, "my_settings", Toast.LENGTH_SHORT).show();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

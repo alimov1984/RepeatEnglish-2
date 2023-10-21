@@ -10,4 +10,10 @@ public interface WordService {
 
     List<Word> getWordsForChecking();
 
+    boolean incrementIncorrectCheckCounter(String wordOriginal);
+
+    boolean incrementCorrectCheckCounter(String wordOriginal);
+
+    boolean updateDateShowed(String wordOriginal);
+
 }

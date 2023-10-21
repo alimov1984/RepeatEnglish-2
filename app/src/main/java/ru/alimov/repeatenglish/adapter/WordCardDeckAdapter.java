@@ -9,7 +9,7 @@ import java.util.List;
 import ru.alimov.repeatenglish.fragment.WordCardFragment;
 import ru.alimov.repeatenglish.model.Word;
 
-public class WordCardDeckAdapter  extends FragmentStateAdapter {
+public class WordCardDeckAdapter extends FragmentStateAdapter {
 
     private List<Word> wordList;
 

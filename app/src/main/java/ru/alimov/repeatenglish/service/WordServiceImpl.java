@@ -1,5 +1,8 @@
 package ru.alimov.repeatenglish.service;
 
+import static android.content.Context.MODE_PRIVATE;
+import static ru.alimov.repeatenglish.util.Const.PREFERENCE_NAME;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -58,9 +61,9 @@ public class WordServiceImpl implements WordService {
     }
 
     public List<Word> getWordsForChecking() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        int wordCount = prefs.getInt("word_checking_count", DEFAULT_WORD_CHECKING_COUNT);
-        List<Word> wordList = wordRepository.getWordsForChecking(10);
+        SharedPreferences settings =  context.getSharedPreferences(PREFERENCE_NAME, MODE_PRIVATE);
+        int wordCount = settings.getInt("word_checking_count", DEFAULT_WORD_CHECKING_COUNT);
+        List<Word> wordList = wordRepository.getWordsForChecking(wordCount);
         return wordList;
     }
 
