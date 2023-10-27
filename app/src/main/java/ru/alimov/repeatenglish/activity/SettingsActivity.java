@@ -1,9 +1,14 @@
 package ru.alimov.repeatenglish.activity;
 
+import static ru.alimov.repeatenglish.util.Const.EXPORT_DB_OUTPUT;
 import static ru.alimov.repeatenglish.util.Const.PREFERENCE_NAME;
 import static ru.alimov.repeatenglish.util.Const.SETTING_WORD_CHECKING_COUNT;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.work.Constraints;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,15 +20,18 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import ru.alimov.repeatenglish.R;
+import ru.alimov.repeatenglish.workers.ExportDbWorker;
 
 public class SettingsActivity extends AppCompatActivity {
 
     private SharedPreferences settings;
 
+    private WorkManager workManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+        workManager = WorkManager.getInstance(getApplicationContext());
 
         EditText wordCountEdit = findViewById(R.id.wordCountEdit);
 
@@ -54,6 +62,25 @@ public class SettingsActivity extends AppCompatActivity {
         Toast.makeText(this,
                 "Настройки успешно сохранены",
                 Toast.LENGTH_SHORT).show();
+    }
+
+    public void onExportBtnClick(View view) {
+
+        Constraints constraints = new Constraints.Builder()
+                .setRequiresStorageNotLow(true)
+                .build();
+
+        WorkRequest myWorkRequest = new OneTimeWorkRequest.Builder(ExportDbWorker.class)
+                .setConstraints(constraints)
+                .addTag(EXPORT_DB_OUTPUT)
+                .build();
+
+        workManager.enqueue(myWorkRequest);
+    }
+
+    public void onImportBtnClick(View view) {
+
+
     }
 
     @Override

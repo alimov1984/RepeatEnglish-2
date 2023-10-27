@@ -138,12 +138,12 @@ public class WordRepository {
         return affectedRows;
     }
 
-    public List<Word> getWordsForExport(int wordCount)
+    public List<Word> getWordsForExport()
     {
         String sql = "SELECT id, word_original, word_translated, dateCreated, dateUpdated, dateShowed,\n" +
                 "                add_counter, correct_check_counter, incorrect_check_counter, rating\n" +
-                "                FROM [word_dictionary]   \n" +
-                "                ORDER BY rowid";
+                "                FROM [word_dictionary]\n" +
+                "                ORDER BY id";
 
         List<Word> wordList = database.getObjectList(sql, this::wordConstructor, null);
         return wordList;

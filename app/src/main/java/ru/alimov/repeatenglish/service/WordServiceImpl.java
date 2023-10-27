@@ -5,12 +5,19 @@ import static ru.alimov.repeatenglish.util.Const.PREFERENCE_NAME;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
-import androidx.preference.PreferenceManager;
-
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,7 +68,7 @@ public class WordServiceImpl implements WordService {
     }
 
     public List<Word> getWordsForChecking() {
-        SharedPreferences settings =  context.getSharedPreferences(PREFERENCE_NAME, MODE_PRIVATE);
+        SharedPreferences settings = context.getSharedPreferences(PREFERENCE_NAME, MODE_PRIVATE);
         int wordCount = settings.getInt("word_checking_count", DEFAULT_WORD_CHECKING_COUNT);
         List<Word> wordList = wordRepository.getWordsForChecking(wordCount);
         return wordList;
@@ -118,4 +125,93 @@ public class WordServiceImpl implements WordService {
         result = result + k1 - k2 - k3 + k4 + k5;
         return result;
     }
+
+    public List<Word> getWordsForExport() {
+        List<Word> wordList = wordRepository.getWordsForExport();
+        return wordList;
+    }
+
+    public Optional<Long> insertWord(Word word) {
+        Optional<Long> affected = wordRepository.insertWord(word);
+        return affected;
+    }
+
+    public void clearWordTable() {
+        wordRepository.clearWordTable();
+    }
+/*
+    public void exportDbInFile() {
+        List<Word> wordList = getWordsForExport();
+        if (wordList.size() == 0) {
+            return;
+        }
+        String fileName = String.format("repeatEnglish_{%s}_{%s}_{%s}_{%s}_{%s}_{%s}.csv"
+                , LocalDateTime.now().getDayOfMonth()
+                , LocalDateTime.now().getMonthValue()
+                , LocalDateTime.now().getYear()
+                , LocalDateTime.now().getHour()
+                , LocalDateTime.now().getMinute()
+                , LocalDateTime.now().getSecond());
+
+        try (FileOutputStream fileOutputStream = context.openFileOutput("export/" + fileName, MODE_PRIVATE);
+             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream)) {
+            outputStreamWriter.write("Id,WordOriginal,WordTranslated,DateCreated,DateUpdated,DateShowed,AddCounter,CorrectCheckCounter,IncorrectCheckCounter,Rating\n");
+            for (Word word : wordList) {
+                outputStreamWriter.write(String.format("{%s},{%s},{%s},{%s},{%s},{%s},{%s,{%s},{%s},{%s}\n"
+                        , word.getId()
+                        , word.getWordOriginal()
+                        , word.getWordTranslated()
+                        , word.getDateCreated().toString()
+                        , word.getDateUpdated().toString()
+                        , word.getDateShowed() != null ? word.getDateShowed().toString() : "0"
+                        , word.getAddCounter()
+                        , word.getCorrectCheckCounter()
+                        , word.getIncorrectCheckCounter()
+                        , word.getRating()));
+            }
+        } catch (Exception ex) {
+            Log.e("WordServiceImpl", ex.getMessage(), ex);
+        }
+    }
+
+    public String importFileInDb(String filePath) {
+        File file = new File(filePath);
+        if (!file.exists()) {
+            return null;
+        }
+        wordRepository.clearWordTable();
+        try (FileInputStream fileInputStream = context.openFileInput(filePath);
+             InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+             BufferedReader bufferedReader = new BufferedReader(inputStreamReader)
+        ) {
+            String line = bufferedReader.readLine();
+            while ((line = bufferedReader.readLine()) != null) {
+                String[] wordAtr = line.split(",", 10);
+                Word word = null;
+
+                String wordOriginal = wordAtr[1];
+                String wordTranslated = wordAtr[2];
+                Instant dateCreated = Instant.ofEpochMilli(Long.parseLong(wordAtr[3]));
+                Instant dateUpdated = Instant.ofEpochMilli(Long.parseLong(wordAtr[4]));
+                Instant dateShowed = null;
+                long dateShowedLong = Long.parseLong(wordAtr[5]);
+                if (dateShowedLong > 0) {
+                    dateShowed = Instant.ofEpochMilli(dateShowedLong);
+                }
+                long addCounter = Long.parseLong(wordAtr[6]);
+                long correctCheckCounter = Long.parseLong(wordAtr[7]);
+                long incorrectCheckCounter = Long.parseLong(wordAtr[8]);
+                long rating = Long.parseLong(wordAtr[9]);
+                word = new Word(wordOriginal, wordTranslated, dateCreated, dateUpdated, dateShowed,
+                        addCounter, correctCheckCounter, incorrectCheckCounter, rating);
+                if (word != null) {
+                    wordRepository.insertWord(word);
+                }
+            }
+        } catch (Exception ex) {
+            Log.e("WordServiceImpl", ex.getMessage(), ex);
+        }
+        return filePath;
+    }
+ */
 }
