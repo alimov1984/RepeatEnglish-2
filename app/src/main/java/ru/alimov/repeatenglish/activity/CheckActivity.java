@@ -47,6 +47,10 @@ public class CheckActivity extends AppCompatActivity {
                     }
                 });
         tabLayoutMediator.attach();
+
+        androidx.appcompat.widget.Toolbar myToolbar =
+                (androidx.appcompat.widget.Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
     }
 
     @Override

@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import ru.alimov.repeatenglish.R;
 import ru.alimov.repeatenglish.service.WordService;
@@ -23,6 +24,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         wordService = new WordServiceImpl(this);
         setContentView(R.layout.activity_main);
+        androidx.appcompat.widget.Toolbar myToolbar =
+                (androidx.appcompat.widget.Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
     }
 
     public void sendMessage(View view) {

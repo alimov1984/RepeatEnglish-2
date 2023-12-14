@@ -28,5 +28,6 @@
             android:name="ru.alimov.repeatenglish.activity.SettingsActivity"
             android:exported="false" />
     </application>
-
+    <uses-permission android:name="ANDROID.PERMISSION.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="ANDROID.PERMISSION.WRITE_EXTERNAL_STORAGE"/>
 </manifest>

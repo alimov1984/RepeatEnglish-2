@@ -3,6 +3,7 @@ package ru.alimov.repeatenglish.workers;
 import static ru.alimov.repeatenglish.util.Const.IMPORT_DB_FILE_PATH;
 
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.work.Worker;
@@ -11,34 +12,48 @@ import androidx.work.WorkerParameters;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.Instant;
 
+import ru.alimov.repeatenglish.R;
 import ru.alimov.repeatenglish.model.Word;
 import ru.alimov.repeatenglish.service.WordService;
+import ru.alimov.repeatenglish.service.WordServiceImpl;
+import ru.alimov.repeatenglish.util.WorkerUtils;
 
 public class ImportDbWorker extends Worker {
     private static final String TAG = ExportDbWorker.class.getSimpleName();
     private final WordService wordService;
 
-    public ImportDbWorker(Context context, WorkerParameters workerParams, WordService wordService) {
+    public ImportDbWorker(Context context, WorkerParameters workerParams) {
         super(context, workerParams);
-        this.wordService = wordService;
+        this.wordService = new WordServiceImpl(context);
+        ;
     }
 
     @Override
     public Result doWork() {
-        String filePath = getInputData().getString(IMPORT_DB_FILE_PATH);
+        Context context = getApplicationContext();
+//        String filePath = getInputData().getString(IMPORT_DB_FILE_PATH);
+//        File file = new File(filePath);
+//        final String[] split = file.getPath().split(":");
+//        filePath = split[1];
+//
+        String filePath = "/data/data/ru.alimov.repeatenglish/files/repeatEnglish_8_12_2023_18_21_39.csv";
         File file = new File(filePath);
         if (!file.exists()) {
             return Worker.Result.failure();
         }
+
         wordService.clearWordTable();
-        Context context = getApplicationContext();
-        try (FileInputStream fileInputStream = context.openFileInput(filePath);
-             InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
-             BufferedReader bufferedReader = new BufferedReader(inputStreamReader)
-        ) {
+        FileInputStream fileInputStream = null;
+        InputStreamReader inputStreamReader = null;
+        try {
+            fileInputStream = new FileInputStream(filePath);
+            inputStreamReader = new InputStreamReader(fileInputStream);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
             String line = bufferedReader.readLine();
             while ((line = bufferedReader.readLine()) != null) {
                 String[] wordAtr = line.split(",", 10);
@@ -46,12 +61,11 @@ public class ImportDbWorker extends Worker {
 
                 String wordOriginal = wordAtr[1];
                 String wordTranslated = wordAtr[2];
-                Instant dateCreated = Instant.ofEpochMilli(Long.parseLong(wordAtr[3]));
-                Instant dateUpdated = Instant.ofEpochMilli(Long.parseLong(wordAtr[4]));
+                Instant dateCreated = Instant.parse(wordAtr[3]);
+                Instant dateUpdated = Instant.parse(wordAtr[4]);
                 Instant dateShowed = null;
-                long dateShowedLong = Long.parseLong(wordAtr[5]);
-                if (dateShowedLong > 0) {
-                    dateShowed = Instant.ofEpochMilli(dateShowedLong);
+                if (!wordAtr[5].equals("0")) {
+                    dateShowed = Instant.parse(wordAtr[5]);
                 }
                 long addCounter = Long.parseLong(wordAtr[6]);
                 long correctCheckCounter = Long.parseLong(wordAtr[7]);
@@ -63,10 +77,30 @@ public class ImportDbWorker extends Worker {
                     wordService.insertWord(word);
                 }
             }
+            inputStreamReader.close();
+            fileInputStream.close();
+            String notifyMessage = String.format("Данные успешно импортированы из файла %s",
+                    filePath);
+            WorkerUtils.makeStatusNotification(
+                    context.getResources().getString(R.string.app_name),
+                    notifyMessage,
+                    context);
+
             return Result.success();
         } catch (Exception ex) {
             Log.e(TAG, ex.getMessage(), ex);
             return Result.failure();
+        } finally {
+            try {
+                if (fileInputStream != null) {
+                    fileInputStream.close();
+                }
+                if (inputStreamReader != null) {
+                    inputStreamReader.close();
+                }
+            } catch (IOException ex2) {
+                Log.e(TAG, ex2.getMessage(), ex2);
+            }
         }
     }
 }

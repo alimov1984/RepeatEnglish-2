@@ -1,18 +1,28 @@
 package ru.alimov.repeatenglish.activity;
 
+import static ru.alimov.repeatenglish.util.Const.EXPORT_DB_FILE_PATH;
 import static ru.alimov.repeatenglish.util.Const.EXPORT_DB_OUTPUT;
+import static ru.alimov.repeatenglish.util.Const.IMPORT_DB_FILE_PATH;
+import static ru.alimov.repeatenglish.util.Const.IMPORT_DB_OUTPUT;
 import static ru.alimov.repeatenglish.util.Const.PREFERENCE_NAME;
 import static ru.alimov.repeatenglish.util.Const.SETTING_WORD_CHECKING_COUNT;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.work.Constraints;
+import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.DocumentsContract;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,12 +31,16 @@ import android.widget.Toast;
 
 import ru.alimov.repeatenglish.R;
 import ru.alimov.repeatenglish.workers.ExportDbWorker;
+import ru.alimov.repeatenglish.workers.ImportDbWorker;
 
 public class SettingsActivity extends AppCompatActivity {
 
     private SharedPreferences settings;
 
     private WorkManager workManager;
+
+    private ActivityResultLauncher<String> dbImportActivity;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +52,42 @@ public class SettingsActivity extends AppCompatActivity {
         settings = getSharedPreferences(PREFERENCE_NAME, MODE_PRIVATE);
         Integer currentWordCount = settings.getInt(SETTING_WORD_CHECKING_COUNT, 10);
         wordCountEdit.setText(currentWordCount.toString());
+
+        registerHandlerForFilePicker();
+
+        androidx.appcompat.widget.Toolbar myToolbar =
+                (androidx.appcompat.widget.Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
+    }
+
+    private void registerHandlerForFilePicker()
+    {
+        dbImportActivity = registerForActivityResult(
+                new ActivityResultContracts.GetContent(),
+                result ->
+                {
+                    if (result.getPath() == null) {
+                        Toast.makeText(this,
+                                "Файл для импорта не выбран",
+                                Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    Constraints constraints = new Constraints.Builder()
+                            .setRequiresStorageNotLow(true)
+                            .build();
+
+                    Data inputData = new Data.Builder()
+                            .putString(IMPORT_DB_FILE_PATH, result.getPath())
+                            .build();
+
+                    WorkRequest myWorkRequest = new OneTimeWorkRequest.Builder(ImportDbWorker.class)
+                            .setConstraints(constraints)
+                            .addTag(IMPORT_DB_OUTPUT)
+                            .setInputData(inputData)
+                            .build();
+
+                    workManager.enqueue(myWorkRequest).getResult();
+                });
     }
 
     public void saveSettings(View view) {
@@ -69,19 +119,20 @@ public class SettingsActivity extends AppCompatActivity {
         Constraints constraints = new Constraints.Builder()
                 .setRequiresStorageNotLow(true)
                 .build();
-
         WorkRequest myWorkRequest = new OneTimeWorkRequest.Builder(ExportDbWorker.class)
                 .setConstraints(constraints)
                 .addTag(EXPORT_DB_OUTPUT)
                 .build();
 
-        workManager.enqueue(myWorkRequest);
+        workManager.enqueue(myWorkRequest).getResult();
     }
 
     public void onImportBtnClick(View view) {
-
-
+       // dbImportActivity.launch("text/comma-separated-values");
+        //text/csv
+        dbImportActivity.launch("*/*");
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
