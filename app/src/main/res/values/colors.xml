@@ -10,6 +10,7 @@
     <color name="mainMenuColor">#2c3e50</color>
     <color name="statusBarColor">#1B3147</color>
     <color name="textColor">#3498db</color>
-    <color name="colorDialogBtnCorrect">#00FF00</color>
-    <color name="colorDialogBtnIncorrect">#FF0000</color>
+    <color name="colorDialogBtnCorrect">#FF084A08</color>
+    <color name="colorDialogBtnIncorrect">#FF930505</color>
+    <color name="splash_background">#FFFFFF</color>
 </resources>

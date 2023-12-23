@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="activity.MainActivity">
+    tools:context="activity.MainActivity" android:id="@+id/content">
     <include layout="@layout/toolbar" android:id="@+id/toolbar"/>
     <TextView
         android:id="@+id/wordOriginalLabel"
@@ -50,6 +50,5 @@
         android:text="Сохранить"
         android:layout_marginTop="50dp"
         app:layout_constraintLeft_toLeftOf="@+id/wordTranslatedEdit"
-        app:layout_constraintTop_toBottomOf="@+id/wordTranslatedEdit"
-        android:onClick="sendMessage"/>
+        app:layout_constraintTop_toBottomOf="@+id/wordTranslatedEdit" />
 </androidx.constraintlayout.widget.ConstraintLayout>

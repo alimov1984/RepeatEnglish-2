@@ -27,7 +27,7 @@
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginRight="10dp"
-        android:background="@color/colorDialogBtnCorrect"
+        android:background="#084A08"
         android:onClick="correctAnswerHandler"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
@@ -39,7 +39,9 @@
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/btn_incorrect_answer"
-        app:layout_constraintTop_toBottomOf="@+id/word_answer" />
+        app:layout_constraintTop_toBottomOf="@+id/word_answer"
+        android:textColor="@color/white"
+        />
 
     <Button
         android:id="@+id/btn_incorrect_answer"
@@ -57,5 +59,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/btn_correct_answer"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/word_answer" />
+        app:layout_constraintTop_toBottomOf="@+id/word_answer"
+        android:textColor="@color/white"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>
