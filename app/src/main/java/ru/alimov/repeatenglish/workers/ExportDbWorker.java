@@ -4,12 +4,14 @@ package ru.alimov.repeatenglish.workers;
 import static ru.alimov.repeatenglish.util.Const.EXPORT_DB_FILE_PATH;
 
 import android.content.Context;
+import android.os.Environment;
 import android.util.Log;
 
 import androidx.work.Data;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -44,7 +46,8 @@ public class ExportDbWorker extends Worker {
                 , LocalDateTime.now().getMinute()
                 , LocalDateTime.now().getSecond());
 
-        String path = context.getFilesDir().getPath();
+        String path = context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).getPath();
+        //).getFilesDir().getPath();
         //context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).getPath();
         String filePath = path + "/" + fileName;
         FileOutputStream fileOutputStream = null;

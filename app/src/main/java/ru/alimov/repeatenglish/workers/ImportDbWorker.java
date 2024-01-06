@@ -4,6 +4,7 @@ import static ru.alimov.repeatenglish.util.Const.IMPORT_DB_FILE_PATH;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Environment;
 import android.util.Log;
 
 import androidx.work.Worker;
@@ -35,25 +36,20 @@ public class ImportDbWorker extends Worker {
     @Override
     public Result doWork() {
         Context context = getApplicationContext();
-//        String filePath = getInputData().getString(IMPORT_DB_FILE_PATH);
-//        File file = new File(filePath);
-//        final String[] split = file.getPath().split(":");
-//        filePath = split[1];
-//
-        String filePath = "/data/data/ru.alimov.repeatenglish/files/repeatEnglish_8_12_2023_18_21_39.csv";
-        File file = new File(filePath);
-        if (!file.exists()) {
-            return Worker.Result.failure();
-        }
+        File externalStorage = Environment.getExternalStorageDirectory();
+        String filePath = getInputData().getString(IMPORT_DB_FILE_PATH);
 
-        wordService.clearWordTable();
+        final String[] split = filePath.split(":");
+        filePath = externalStorage.getPath() + "/" + split[1];
+
         FileInputStream fileInputStream = null;
         InputStreamReader inputStreamReader = null;
         try {
             fileInputStream = new FileInputStream(filePath);
             inputStreamReader = new InputStreamReader(fileInputStream);
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-
+            wordService.clearWordTable();
+            //Read caption line from the file.
             String line = bufferedReader.readLine();
             while ((line = bufferedReader.readLine()) != null) {
                 String[] wordAtr = line.split(",", 10);

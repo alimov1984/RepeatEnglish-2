@@ -10,6 +10,7 @@ import static ru.alimov.repeatenglish.util.Const.SETTING_WORD_CHECKING_COUNT;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.work.Constraints;
 import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
@@ -66,7 +67,7 @@ public class SettingsActivity extends AppCompatActivity {
                 new ActivityResultContracts.GetContent(),
                 result ->
                 {
-                    if (result.getPath() == null) {
+                    if (result == null || result.getPath() == null) {
                         Toast.makeText(this,
                                 "Файл для импорта не выбран",
                                 Toast.LENGTH_SHORT).show();
@@ -128,7 +129,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void onImportBtnClick(View view) {
-       // dbImportActivity.launch("text/comma-separated-values");
+        // dbImportActivity.launch("text/comma-separated-values");
         //text/csv
         dbImportActivity.launch("*/*");
     }

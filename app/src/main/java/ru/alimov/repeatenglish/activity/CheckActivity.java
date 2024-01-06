@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
@@ -40,7 +42,7 @@ public class CheckActivity extends AppCompatActivity {
         TabLayout tabLayout = findViewById(R.id.tab_layout);
 
         TabLayoutMediator tabLayoutMediator = new TabLayoutMediator(tabLayout, word_pager,
-                new TabLayoutMediator.TabConfigurationStrategy(){
+                new TabLayoutMediator.TabConfigurationStrategy() {
                     @Override
                     public void onConfigureTab(TabLayout.Tab tab, int position) {
                         tab.setText("Word " + (position + 1));
@@ -51,6 +53,17 @@ public class CheckActivity extends AppCompatActivity {
         androidx.appcompat.widget.Toolbar myToolbar =
                 (androidx.appcompat.widget.Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
+
+        TextView msgLabel = findViewById(R.id.msgLabel);
+        if (wordList.size() == 0) {
+            msgLabel.setText(getResources().getString(R.string.checking_words_empty));
+            msgLabel.setVisibility(View.VISIBLE);
+            word_pager.setVisibility(View.INVISIBLE);
+            return;
+        } else {
+            msgLabel.setVisibility(View.INVISIBLE);
+            word_pager.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

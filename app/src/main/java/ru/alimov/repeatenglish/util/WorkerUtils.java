@@ -6,10 +6,13 @@ import static ru.alimov.repeatenglish.util.Const.CHANNEL_NAME;
 import static ru.alimov.repeatenglish.util.Const.NOTIFICATION_ID;
 
 import android.Manifest;
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.media.AudioAttributes;
+import android.media.RingtoneManager;
 import android.os.Build;
 
 import androidx.core.app.ActivityCompat;
@@ -34,7 +37,11 @@ public final class WorkerUtils {
             NotificationChannel channel = new NotificationChannel(
                     CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
             channel.setDescription(CHANNEL_DESCRIPTION);
-
+            channel.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION),
+                    new AudioAttributes.Builder()
+                            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                            .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
+                            .build());
             // Add the channel
             NotificationManager notificationManager =
                     (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -43,15 +50,20 @@ public final class WorkerUtils {
                 notificationManager.createNotificationChannel(channel);
             }
         }
-        //NotificationCompat.BigTextStyle textStyle = new NotificationCompat.BigTextStyle();
+//        NotificationCompat.BigTextStyle textStyle = new NotificationCompat.BigTextStyle();
+//        textStyle.setBigContentTitle("Данные успешно экспортированы в файл...");
+//        textStyle.bigText(message);
+//        textStyle.setSummaryText("Summary");
         // Create the notification
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(title)
                 .setContentText(message)
-                //.setStyle(textStyle)
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText(message))
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setVibrate(new long[0]);
+                .setVibrate(new long[0])
+                .setDefaults(Notification.DEFAULT_SOUND);
 
         // Show the notification
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
