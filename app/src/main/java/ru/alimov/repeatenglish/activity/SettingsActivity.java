@@ -1,6 +1,5 @@
 package ru.alimov.repeatenglish.activity;
 
-import static ru.alimov.repeatenglish.util.Const.EXPORT_DB_FILE_PATH;
 import static ru.alimov.repeatenglish.util.Const.EXPORT_DB_OUTPUT;
 import static ru.alimov.repeatenglish.util.Const.IMPORT_DB_FILE_PATH;
 import static ru.alimov.repeatenglish.util.Const.IMPORT_DB_OUTPUT;
@@ -10,20 +9,15 @@ import static ru.alimov.repeatenglish.util.Const.SETTING_WORD_CHECKING_COUNT;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityOptionsCompat;
 import androidx.work.Constraints;
 import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.DocumentsContract;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,6 +28,9 @@ import ru.alimov.repeatenglish.R;
 import ru.alimov.repeatenglish.workers.ExportDbWorker;
 import ru.alimov.repeatenglish.workers.ImportDbWorker;
 
+/**
+ * Setting page.
+ */
 public class SettingsActivity extends AppCompatActivity {
 
     private SharedPreferences settings;
@@ -51,6 +48,7 @@ public class SettingsActivity extends AppCompatActivity {
         EditText wordCountEdit = findViewById(R.id.wordCountEdit);
 
         settings = getSharedPreferences(PREFERENCE_NAME, MODE_PRIVATE);
+        //Get value of current word count for checking page.
         Integer currentWordCount = settings.getInt(SETTING_WORD_CHECKING_COUNT, 10);
         wordCountEdit.setText(currentWordCount.toString());
 
@@ -59,36 +57,6 @@ public class SettingsActivity extends AppCompatActivity {
         androidx.appcompat.widget.Toolbar myToolbar =
                 (androidx.appcompat.widget.Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
-    }
-
-    private void registerHandlerForFilePicker()
-    {
-        dbImportActivity = registerForActivityResult(
-                new ActivityResultContracts.GetContent(),
-                result ->
-                {
-                    if (result == null || result.getPath() == null) {
-                        Toast.makeText(this,
-                                "Файл для импорта не выбран",
-                                Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    Constraints constraints = new Constraints.Builder()
-                            .setRequiresStorageNotLow(true)
-                            .build();
-
-                    Data inputData = new Data.Builder()
-                            .putString(IMPORT_DB_FILE_PATH, result.getPath())
-                            .build();
-
-                    WorkRequest myWorkRequest = new OneTimeWorkRequest.Builder(ImportDbWorker.class)
-                            .setConstraints(constraints)
-                            .addTag(IMPORT_DB_OUTPUT)
-                            .setInputData(inputData)
-                            .build();
-
-                    workManager.enqueue(myWorkRequest).getResult();
-                });
     }
 
     public void saveSettings(View view) {
@@ -115,11 +83,41 @@ public class SettingsActivity extends AppCompatActivity {
                 Toast.LENGTH_SHORT).show();
     }
 
-    public void onExportBtnClick(View view) {
+    private void registerHandlerForFilePicker() {
+        dbImportActivity = registerForActivityResult(
+                new ActivityResultContracts.GetContent(),
+                result ->
+                {
+                    if (result == null || result.getPath() == null) {
+                        Toast.makeText(this,
+                                "File isn't selected",
+                                Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    Constraints constraints = new Constraints.Builder()
+                            .setRequiresStorageNotLow(true)
+                            .build();
 
+                    Data inputData = new Data.Builder()
+                            .putString(IMPORT_DB_FILE_PATH, result.getPath())
+                            .build();
+
+                    //Execute import in separated thread.
+                    WorkRequest myWorkRequest = new OneTimeWorkRequest.Builder(ImportDbWorker.class)
+                            .setConstraints(constraints)
+                            .addTag(IMPORT_DB_OUTPUT)
+                            .setInputData(inputData)
+                            .build();
+
+                    workManager.enqueue(myWorkRequest).getResult();
+                });
+    }
+
+    public void onExportBtnClick(View view) {
         Constraints constraints = new Constraints.Builder()
                 .setRequiresStorageNotLow(true)
                 .build();
+        //Execute export db in separated thread.
         WorkRequest myWorkRequest = new OneTimeWorkRequest.Builder(ExportDbWorker.class)
                 .setConstraints(constraints)
                 .addTag(EXPORT_DB_OUTPUT)
@@ -129,15 +127,12 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void onImportBtnClick(View view) {
-        // dbImportActivity.launch("text/comma-separated-values");
-        //text/csv
         dbImportActivity.launch("*/*");
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
@@ -153,9 +148,7 @@ public class SettingsActivity extends AppCompatActivity {
             case R.id.menu_word_check:
                 Intent intent2 = new Intent(this, CheckActivity.class);
                 startActivity(intent2);
-                //Toast.makeText(this, "menu_word_check", Toast.LENGTH_SHORT).show();
                 return true;
-
         }
         return super.onOptionsItemSelected(item);
     }

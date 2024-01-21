@@ -11,6 +11,9 @@ import java.util.concurrent.TimeUnit;
 
 import ru.alimov.repeatenglish.model.Word;
 
+/**
+ * Word repository implementation.
+ */
 public class WordRepository {
     private final static String DICTIONARY_TABLE_NAME = "word_dictionary";
     private final static String PRIMARY_COLUMN_ID = "id";

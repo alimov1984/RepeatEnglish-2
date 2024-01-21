@@ -11,7 +11,6 @@ import androidx.work.Data;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -24,6 +23,9 @@ import ru.alimov.repeatenglish.service.WordService;
 import ru.alimov.repeatenglish.service.WordServiceImpl;
 import ru.alimov.repeatenglish.util.WorkerUtils;
 
+/**
+ * Worker is used to export db to file.
+ */
 public class ExportDbWorker extends Worker {
 
     private static final String TAG = ExportDbWorker.class.getSimpleName();
@@ -47,12 +49,11 @@ public class ExportDbWorker extends Worker {
                 , LocalDateTime.now().getSecond());
 
         String path = context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).getPath();
-        //).getFilesDir().getPath();
-        //context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).getPath();
         String filePath = path + "/" + fileName;
         FileOutputStream fileOutputStream = null;
         OutputStreamWriter outputStreamWriter = null;
-        try {
+        try
+        {
             fileOutputStream = new FileOutputStream(filePath);
             outputStreamWriter = new OutputStreamWriter(fileOutputStream);
             outputStreamWriter.write("Id,WordOriginal,WordTranslated,DateCreated,DateUpdated,DateShowed,AddCounter,CorrectCheckCounter,IncorrectCheckCounter,Rating\n");
@@ -87,7 +88,6 @@ public class ExportDbWorker extends Worker {
             Log.e(TAG, ex.getMessage(), ex);
             return Worker.Result.failure();
         } finally {
-
             try {
                 if (fileOutputStream != null) {
                     fileOutputStream.close();

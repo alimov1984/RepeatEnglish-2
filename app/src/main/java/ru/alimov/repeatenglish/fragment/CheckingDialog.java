@@ -19,6 +19,9 @@ import ru.alimov.repeatenglish.R;
 import ru.alimov.repeatenglish.service.WordService;
 import ru.alimov.repeatenglish.service.WordServiceImpl;
 
+/**
+ * Dialog window with translation.
+ */
 public class CheckingDialog extends DialogFragment {
 
     private String question;
@@ -52,54 +55,34 @@ public class CheckingDialog extends DialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.fragment_checking_dialog, null);
 
+        //Show translation of selected word.
         TextView word_card_question = dialogView.findViewById(R.id.word_answer);
         word_card_question.setText(answer);
 
+        //Set handler for positive button.
         Button btnCorrectAnswer = dialogView.findViewById(R.id.btn_correct_answer);
         btnCorrectAnswer.setOnClickListener(view -> {
                     if (wordService.incrementCorrectCheckCounter(question)) {
-                        Toast.makeText(getContext(), "Push corect", Toast.LENGTH_SHORT).show();
                         this.dismiss();
                     }
                 }
         );
 
+        //Set handler for negative button.
         Button btnIncorrectAnswer = dialogView.findViewById(R.id.btn_incorrect_answer);
         btnIncorrectAnswer.setOnClickListener(view -> {
                     if (wordService.incrementIncorrectCheckCounter(question)) {
-                        Toast.makeText(getContext(), "Push incorrect", Toast.LENGTH_SHORT).show();
                         this.dismiss();
                     }
                 }
         );
 
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         return builder
-                .setTitle("Оцени себя")
+                .setTitle("Rate yourself!")
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setView(dialogView)
                 .create();
     }
-
-//
-//    @Override
-//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-//                             Bundle savedInstanceState) {
-//        // Inflate the layout for this fragment
-//        View result = inflater.inflate(R.layout.fragment_checking_dialog, container, false);
-//
-//        TextView word_card_question = result.findViewById(R.id.word_answer);
-//        word_card_question.setText(answer);
-//
-//       Button btnCorrectAnswer = result.findViewById(R.id.btn_correct_answer);
-//       btnCorrectAnswer.setOnClickListener(view->{
-//
-//               }
-//       );
-//
-//        return result;
-//    }
-
 
 }

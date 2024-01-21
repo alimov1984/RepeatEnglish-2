@@ -1,5 +1,8 @@
 package ru.alimov.repeatenglish.model;
 
+/**
+ * UI state of main page.
+ */
 public class MainActivityUiState {
     private String wordOriginate;
     private String wordTranslated;
@@ -16,12 +19,4 @@ public class MainActivityUiState {
     public String getWordTranslated() {
         return this.wordTranslated;
     }
-
-//    public void setWordOriginate(String wordOriginate) {
-//        this.wordOriginate = wordOriginate;
-//    }
-//
-//    public void getWordTranslated(String wordTranslated) {
-//        this.wordTranslated = wordTranslated;
-//    }
 }

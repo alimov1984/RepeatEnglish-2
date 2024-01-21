@@ -5,6 +5,9 @@ import java.util.Optional;
 
 import ru.alimov.repeatenglish.model.Word;
 
+/**
+ * Word service interface.
+ */
 public interface WordService {
 
     String insertWord(String wordOriginal, String wordTranslated);

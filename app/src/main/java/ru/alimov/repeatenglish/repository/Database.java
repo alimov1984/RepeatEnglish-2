@@ -12,7 +12,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-
+/**
+ * DB(under repository) implementation.
+ */
 public class Database extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "repeatEnglish.db";
     private static final int SCHEMA_VERSION = 1;

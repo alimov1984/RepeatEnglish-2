@@ -2,6 +2,9 @@ package ru.alimov.repeatenglish.model;
 
 import java.time.Instant;
 
+/**
+ * Class describes word inside app.
+ */
 public class Word {
     private long id;
     private String wordOriginal;

@@ -9,8 +9,10 @@ import java.util.List;
 import ru.alimov.repeatenglish.fragment.WordCardFragment;
 import ru.alimov.repeatenglish.model.Word;
 
+/**
+ * Adapter store words for view pager.
+ */
 public class WordCardDeckAdapter extends FragmentStateAdapter {
-
     private List<Word> wordList;
 
     public WordCardDeckAdapter(FragmentActivity fragmentActivity, List<Word> wordList) {

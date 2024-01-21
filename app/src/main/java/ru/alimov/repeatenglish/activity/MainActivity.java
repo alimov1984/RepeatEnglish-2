@@ -23,8 +23,10 @@ import ru.alimov.repeatenglish.model.MainActivityViewModel;
 import ru.alimov.repeatenglish.service.WordService;
 import ru.alimov.repeatenglish.service.WordServiceImpl;
 
+/**
+ * Main page is used for input new words.
+ */
 public class MainActivity extends AppCompatActivity {
-
     private WordService wordService;
 
     private MainActivityViewModel uiModel;
@@ -36,24 +38,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         wordService = new WordServiceImpl(this);
 
+        //Keeping logo some time before showing main page.
         final Handler handler = new Handler();
         handler.postDelayed(() -> {
             splashScreen.setKeepOnScreenCondition(() -> false);
             mainActivityProcess();
-        }, 1000);
+        }, 500);
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        super.onSaveInstanceState(savedInstanceState);
-        EditText wordOriginalEdit = findViewById(R.id.wordOriginalEdit);
-        EditText wordTranslatedEdit = findViewById(R.id.wordTranslatedEdit);
-
-        MainActivityUiState uiState = new MainActivityUiState(wordOriginalEdit.getText().toString(),
-                wordTranslatedEdit.getText().toString());
-        uiModel.getUiState().setValue(uiState);
-    }
-
+    //Rest part that executes before main page showing.
     private void mainActivityProcess() {
         setContentView(R.layout.activity_main);
         androidx.appcompat.widget.Toolbar myToolbar =
@@ -63,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
         EditText wordOriginalEdit = findViewById(R.id.wordOriginalEdit);
         EditText wordTranslatedEdit = findViewById(R.id.wordTranslatedEdit);
 
+        //Define model view.
         uiModel = new ViewModelProvider(this).get(MainActivityViewModel.class);
         final Observer<MainActivityUiState> uiObserver = new Observer<MainActivityUiState>() {
             @Override
@@ -81,17 +75,32 @@ public class MainActivity extends AppCompatActivity {
                 sendMessage(v);
             }
         });
-
     }
 
+    //Occurs after rotate device.
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        EditText wordOriginalEdit = findViewById(R.id.wordOriginalEdit);
+        EditText wordTranslatedEdit = findViewById(R.id.wordTranslatedEdit);
+
+        //Update model view.
+        MainActivityUiState uiState = new MainActivityUiState(wordOriginalEdit.getText().toString(),
+                wordTranslatedEdit.getText().toString());
+        uiModel.getUiState().setValue(uiState);
+    }
+
+    //User inserted new word.
     public void sendMessage(View view) {
         EditText wordOriginalEdit = findViewById(R.id.wordOriginalEdit);
         EditText wordTranslatedEdit = findViewById(R.id.wordTranslatedEdit);
 
+        //Update model view.
         MainActivityUiState uiState = new MainActivityUiState(wordOriginalEdit.getText().toString(),
                 wordTranslatedEdit.getText().toString());
         uiModel.getUiState().setValue(uiState);
 
+        //Validating input data.
         String wordOriginal = uiState.getWordOriginate().trim();
         if (wordOriginal.length() == 0) {
             Toast.makeText(this, "Необходимо заполнить поле 'Новое слово'", Toast.LENGTH_SHORT).show();
@@ -104,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
+        //Insert new word in the database.
         String result = wordService.insertWord(wordOriginal, wordTranslated);
         if (result != null && result.length() > 0) {
             uiState = new MainActivityUiState("", "");
@@ -114,7 +124,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
@@ -126,12 +135,10 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menu_word_check:
                 Intent intent = new Intent(this, CheckActivity.class);
                 startActivity(intent);
-                //Toast.makeText(this, "menu_word_check", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.menu_settings:
                 Intent intent2 = new Intent(this, SettingsActivity.class);
                 startActivity(intent2);
-                //Toast.makeText(this, "my_settings", Toast.LENGTH_SHORT).show();
                 return true;
         }
         return super.onOptionsItemSelected(item);

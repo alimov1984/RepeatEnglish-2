@@ -23,6 +23,9 @@ import ru.alimov.repeatenglish.service.WordService;
 import ru.alimov.repeatenglish.service.WordServiceImpl;
 import ru.alimov.repeatenglish.R;
 
+/**
+ * Checking page.
+ */
 public class CheckActivity extends AppCompatActivity {
 
     private WordService wordService;
@@ -68,7 +71,6 @@ public class CheckActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
@@ -84,7 +86,6 @@ public class CheckActivity extends AppCompatActivity {
             case R.id.menu_settings:
                 Intent intent2 = new Intent(this, SettingsActivity.class);
                 startActivity(intent2);
-                //Toast.makeText(this, "my_settings", Toast.LENGTH_SHORT).show();
                 return true;
         }
         return super.onOptionsItemSelected(item);

@@ -21,6 +21,9 @@ import androidx.core.app.NotificationManagerCompat;
 
 import ru.alimov.repeatenglish.R;
 
+/**
+ * Utility functions for workers.
+ */
 public final class WorkerUtils {
     private static final String TAG = WorkerUtils.class.getSimpleName();
 
@@ -50,10 +53,6 @@ public final class WorkerUtils {
                 notificationManager.createNotificationChannel(channel);
             }
         }
-//        NotificationCompat.BigTextStyle textStyle = new NotificationCompat.BigTextStyle();
-//        textStyle.setBigContentTitle("Данные успешно экспортированы в файл...");
-//        textStyle.bigText(message);
-//        textStyle.setSummaryText("Summary");
         // Create the notification
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)

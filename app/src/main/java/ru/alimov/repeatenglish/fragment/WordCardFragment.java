@@ -18,9 +18,7 @@ import ru.alimov.repeatenglish.service.WordService;
 import ru.alimov.repeatenglish.service.WordServiceImpl;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link WordCardFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Fragment for view pager on checking page.
  */
 public class WordCardFragment extends Fragment {
 
@@ -64,7 +62,6 @@ public class WordCardFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d("WordCardFragment", "onCreateView");
         View resultView = inflater.inflate(R.layout.fragment_word_card, container, false);
         TextView word_card_question = resultView.findViewById(R.id.word_card_question);
         word_card_question.setText(this.question);
@@ -73,14 +70,15 @@ public class WordCardFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        Log.d("WordCardFragment", "onViewCreated");
         TextView word_card_question = view.findViewById(R.id.word_card_question);
         word_card_question.setText(this.question);
 
+        //After click on the word show dialog window with translation.
         word_card_question.setOnClickListener(view2 -> {
             CheckingDialog checkingDialog = CheckingDialog.newInstance(question, answer);
             checkingDialog.show(getActivity().getSupportFragmentManager(), "checkingDialog");
         });
-        //wordService.updateDateShowed(this.question);
+        //Increment count of word's show in db.
+        wordService.updateDateShowed(this.question);
     }
 }

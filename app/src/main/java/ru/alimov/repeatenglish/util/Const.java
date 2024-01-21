@@ -1,5 +1,8 @@
 package ru.alimov.repeatenglish.util;
 
+/**
+ * Constant variables.
+ */
 public final class Const {
     private Const() {}
 

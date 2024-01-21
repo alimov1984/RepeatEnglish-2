@@ -3,7 +3,6 @@ package ru.alimov.repeatenglish.workers;
 import static ru.alimov.repeatenglish.util.Const.IMPORT_DB_FILE_PATH;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 
@@ -23,6 +22,9 @@ import ru.alimov.repeatenglish.service.WordService;
 import ru.alimov.repeatenglish.service.WordServiceImpl;
 import ru.alimov.repeatenglish.util.WorkerUtils;
 
+/**
+ * Worker is used for import from file to db.
+ */
 public class ImportDbWorker extends Worker {
     private static final String TAG = ExportDbWorker.class.getSimpleName();
     private final WordService wordService;
@@ -30,16 +32,15 @@ public class ImportDbWorker extends Worker {
     public ImportDbWorker(Context context, WorkerParameters workerParams) {
         super(context, workerParams);
         this.wordService = new WordServiceImpl(context);
-        ;
     }
 
     @Override
     public Result doWork() {
         Context context = getApplicationContext();
-        File externalStorage = Environment.getExternalStorageDirectory();
         String filePath = getInputData().getString(IMPORT_DB_FILE_PATH);
 
         final String[] split = filePath.split(":");
+        File externalStorage = Environment.getExternalStorageDirectory();
         filePath = externalStorage.getPath() + "/" + split[1];
 
         FileInputStream fileInputStream = null;
@@ -54,7 +55,6 @@ public class ImportDbWorker extends Worker {
             while ((line = bufferedReader.readLine()) != null) {
                 String[] wordAtr = line.split(",", 10);
                 Word word = null;
-
                 String wordOriginal = wordAtr[1];
                 String wordTranslated = wordAtr[2];
                 Instant dateCreated = Instant.parse(wordAtr[3]);
