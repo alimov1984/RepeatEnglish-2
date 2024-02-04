@@ -19,8 +19,8 @@ import java.util.List;
 
 import ru.alimov.repeatenglish.R;
 import ru.alimov.repeatenglish.model.Word;
+import ru.alimov.repeatenglish.service.ServiceSupplier;
 import ru.alimov.repeatenglish.service.WordService;
-import ru.alimov.repeatenglish.service.WordServiceImpl;
 import ru.alimov.repeatenglish.util.WorkerUtils;
 
 /**
@@ -33,7 +33,7 @@ public class ExportDbWorker extends Worker {
 
     public ExportDbWorker(Context context, WorkerParameters workerParams) {
         super(context, workerParams);
-        this.wordService = new WordServiceImpl(context);
+        this.wordService = ServiceSupplier.getWordService(context);
     }
 
     @Override

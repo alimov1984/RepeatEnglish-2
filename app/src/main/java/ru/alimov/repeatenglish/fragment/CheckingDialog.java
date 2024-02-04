@@ -4,6 +4,7 @@ import static ru.alimov.repeatenglish.util.Const.WORD_CARD_ANSWER;
 import static ru.alimov.repeatenglish.util.Const.WORD_CARD_QUESTION;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
@@ -13,11 +14,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import ru.alimov.repeatenglish.R;
+import ru.alimov.repeatenglish.service.ServiceSupplier;
 import ru.alimov.repeatenglish.service.WordService;
-import ru.alimov.repeatenglish.service.WordServiceImpl;
+
 
 /**
  * Dialog window with translation.
@@ -26,24 +27,24 @@ public class CheckingDialog extends DialogFragment {
 
     private String question;
     private String answer;
+    private WordService wordService;
 
-    private static WordService wordService;
 
-
-    public static CheckingDialog newInstance(String question, String answer) {
+    public static CheckingDialog newInstance(String question, String answer, Context context) {
         CheckingDialog checkingDialog = new CheckingDialog();
+        checkingDialog.wordService = ServiceSupplier.getWordService(context);
 
         Bundle args = new Bundle();
         args.putString(WORD_CARD_QUESTION, question);
         args.putString(WORD_CARD_ANSWER, answer);
         checkingDialog.setArguments(args);
+
         return checkingDialog;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        wordService = new WordServiceImpl(getContext());
     }
 
     @Override

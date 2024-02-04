@@ -20,7 +20,7 @@ public class Database extends SQLiteOpenHelper {
     private static final int SCHEMA_VERSION = 1;
 
     public Database(Context context) {
-        super(context.getApplicationContext(), DATABASE_NAME, null, SCHEMA_VERSION);
+        super(context, DATABASE_NAME, null, SCHEMA_VERSION);
     }
 
     @Override

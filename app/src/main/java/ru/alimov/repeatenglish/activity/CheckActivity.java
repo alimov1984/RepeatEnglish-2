@@ -10,7 +10,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -19,8 +18,8 @@ import java.util.List;
 
 import ru.alimov.repeatenglish.adapter.WordCardDeckAdapter;
 import ru.alimov.repeatenglish.model.Word;
+import ru.alimov.repeatenglish.service.ServiceSupplier;
 import ru.alimov.repeatenglish.service.WordService;
-import ru.alimov.repeatenglish.service.WordServiceImpl;
 import ru.alimov.repeatenglish.R;
 
 /**
@@ -30,12 +29,14 @@ public class CheckActivity extends AppCompatActivity {
 
     private WordService wordService;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        wordService = ServiceSupplier.getWordService(getApplicationContext());
         setContentView(R.layout.activity_check);
 
-        wordService = new WordServiceImpl(this);
         List<Word> wordList = wordService.getWordsForChecking();
 
         ViewPager2 word_pager = findViewById(R.id.word_pager);

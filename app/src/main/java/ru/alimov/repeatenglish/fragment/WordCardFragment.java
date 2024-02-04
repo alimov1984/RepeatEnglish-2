@@ -7,15 +7,14 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import ru.alimov.repeatenglish.R;
+import ru.alimov.repeatenglish.service.ServiceSupplier;
 import ru.alimov.repeatenglish.service.WordService;
-import ru.alimov.repeatenglish.service.WordServiceImpl;
 
 /**
  * Fragment for view pager on checking page.
@@ -41,6 +40,7 @@ public class WordCardFragment extends Fragment {
      */
     public static WordCardFragment newInstance(String question, String answer) {
         WordCardFragment fragment = new WordCardFragment();
+
         Bundle args = new Bundle();
         args.putString(WORD_CARD_QUESTION, question);
         args.putString(WORD_CARD_ANSWER, answer);
@@ -51,7 +51,7 @@ public class WordCardFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        wordService = new WordServiceImpl(this.getContext());
+        this.wordService = ServiceSupplier.getWordService(getContext());
         if (getArguments() != null) {
             Bundle args = getArguments();
             this.question = args.getString(WORD_CARD_QUESTION, "");
@@ -75,7 +75,7 @@ public class WordCardFragment extends Fragment {
 
         //After click on the word show dialog window with translation.
         word_card_question.setOnClickListener(view2 -> {
-            CheckingDialog checkingDialog = CheckingDialog.newInstance(question, answer);
+            CheckingDialog checkingDialog = CheckingDialog.newInstance(question, answer, getContext());
             checkingDialog.show(getActivity().getSupportFragmentManager(), "checkingDialog");
         });
         //Increment count of word's show in db.

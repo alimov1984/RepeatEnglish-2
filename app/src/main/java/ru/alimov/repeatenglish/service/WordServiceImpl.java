@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 import ru.alimov.repeatenglish.model.Word;
+import ru.alimov.repeatenglish.repository.RepositorySupplier;
 import ru.alimov.repeatenglish.repository.WordRepository;
 
 /**
@@ -26,7 +27,7 @@ public class WordServiceImpl implements WordService {
 
     public WordServiceImpl(Context context) {
         this.context = context;
-        this.wordRepository = new WordRepository(context);
+        this.wordRepository = RepositorySupplier.getWordRepository(context);
     }
 
 

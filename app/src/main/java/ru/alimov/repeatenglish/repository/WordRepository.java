@@ -100,7 +100,7 @@ public class WordRepository {
         String sql = "SELECT id, word_original, word_translated, dateCreated, dateUpdated, dateShowed,\n" +
                 "                add_counter, correct_check_counter, incorrect_check_counter, rating\n" +
                 "                FROM [word_dictionary]   \n" +
-                "                WHERE dateShowed IS NULL OR (? - dateShowed) > ?\n" +
+                "                WHERE dateShowed IS NULL OR (CAST(? AS INTEGER) - dateShowed) > CAST(? AS INTEGER)\n" +
                 "                ORDER BY rating DESC\n" +
                 "                LIMIT ?";
         String[] params = new String[]{

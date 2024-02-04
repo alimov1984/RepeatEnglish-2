@@ -20,8 +20,8 @@ import android.widget.Toast;
 import ru.alimov.repeatenglish.R;
 import ru.alimov.repeatenglish.model.MainActivityUiState;
 import ru.alimov.repeatenglish.model.MainActivityViewModel;
+import ru.alimov.repeatenglish.service.ServiceSupplier;
 import ru.alimov.repeatenglish.service.WordService;
-import ru.alimov.repeatenglish.service.WordServiceImpl;
 
 /**
  * Main page is used for input new words.
@@ -35,8 +35,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
         splashScreen.setKeepOnScreenCondition(() -> true);
+
         super.onCreate(savedInstanceState);
-        wordService = new WordServiceImpl(this);
+        wordService = ServiceSupplier.getWordService(getApplicationContext());
 
         //Keeping logo some time before showing main page.
         final Handler handler = new Handler();
