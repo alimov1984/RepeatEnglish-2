@@ -90,13 +90,13 @@ public class Database extends SQLiteOpenHelper {
         return resultRowId;
     }
 
-    public Optional<Integer> updateRow(String tableName, String idColumn, long idColumnValue, ContentValues values) {
+    public int updateRow(String tableName, String idColumn, long idColumnValue, ContentValues values) {
         String whereClause = idColumn + " = ?";
         String[] whereArgs = new String[]{String.valueOf(idColumnValue)};
-        Optional<Integer> affectedRows = Optional.empty();
+        int affectedRows = 0;
         try {
             SQLiteDatabase database = this.getWritableDatabase();
-            affectedRows = Optional.of(database.update(tableName, values, whereClause, whereArgs));
+            affectedRows = database.update(tableName, values, whereClause, whereArgs);
         } catch (Exception ex) {
             Log.e("Database", ex.getMessage(), ex);
         } finally {

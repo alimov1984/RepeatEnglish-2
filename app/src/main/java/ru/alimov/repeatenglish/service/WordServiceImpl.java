@@ -38,8 +38,7 @@ public class WordServiceImpl implements WordService {
             word.setDateUpdated(Instant.now());
             word.setAddCounter(word.getAddCounter() + 1);
             word.setRating(getRatingValue(word));
-            Optional<Integer> updateResult = wordRepository.updateWord(word);
-            if (updateResult.isPresent() && updateResult.get() > 0) {
+            if (wordRepository.updateWord(word) > 0) {
                 result = "Update word successfully";
             }
         } else {
@@ -74,8 +73,7 @@ public class WordServiceImpl implements WordService {
         if (word != null) {
             word.setCorrectCheckCounter(word.getCorrectCheckCounter() + 1);
             word.setRating(getRatingValue(word));
-            Optional<Integer> result = wordRepository.incrementWordCorrectCheckCounter(word);
-            if (result.isPresent() && result.get() > 0) {
+            if (wordRepository.incrementWordCorrectCheckCounter(word) > 0) {
                 return true;
             }
         }
@@ -87,8 +85,7 @@ public class WordServiceImpl implements WordService {
         if (word != null) {
             word.setIncorrectCheckCounter(word.getIncorrectCheckCounter() + 1);
             word.setRating(getRatingValue(word));
-            Optional<Integer> result = wordRepository.incrementWordIncorrectCheckCounter(word);
-            if (result.isPresent() && result.get() > 0) {
+            if (wordRepository.incrementWordIncorrectCheckCounter(word) > 0) {
                 return true;
             }
         }
@@ -98,8 +95,7 @@ public class WordServiceImpl implements WordService {
     public boolean updateDateShowed(String wordOriginal) {
         Word word = wordRepository.getWordByOriginal(wordOriginal);
         if (word != null) {
-            Optional<Integer> result = wordRepository.updateWordDateShowed(word);
-            if (result.isPresent() && result.get() > 0) {
+            if (wordRepository.updateWordDateShowed(word) > 0) {
                 return true;
             }
         }

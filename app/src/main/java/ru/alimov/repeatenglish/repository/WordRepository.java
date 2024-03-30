@@ -25,8 +25,8 @@ public class WordRepository {
 
     private Word wordConstructor(Cursor dbCursor) {
         long id = dbCursor.getLong(0);
-        String word_original = dbCursor.getString(1);
-        String word_translated = dbCursor.getString(2);
+        String wordOriginal = dbCursor.getString(1);
+        String wordTranslated = dbCursor.getString(2);
         Instant.ofEpochMilli(dbCursor.getLong(3));
         Instant dateCreated = Instant.now();
         Instant dateUpdated = Instant.ofEpochMilli(dbCursor.getLong(4));
@@ -39,7 +39,7 @@ public class WordRepository {
         long incorrectCheckCounter = dbCursor.getLong(8);
         long rating = dbCursor.getLong(9);
 
-        Word word = new Word(id, word_original, word_translated, dateCreated, dateUpdated, dateShowed,
+        Word word = new Word(id, wordOriginal, wordTranslated, dateCreated, dateUpdated, dateShowed,
                 addCounter, correctCheckCounter, incorrectCheckCounter, rating);
         return word;
     }
@@ -80,7 +80,7 @@ public class WordRepository {
         return insertedRowId;
     }
 
-    public Optional<Integer> updateWord(Word word) {
+    public int updateWord(Word word) {
         ContentValues cv = new ContentValues();
         cv.put("word_original", word.getWordOriginal().replace(",",""));
         cv.put("word_translated", word.getWordTranslated().replace(",",""));
@@ -90,7 +90,7 @@ public class WordRepository {
         cv.put("incorrect_check_counter", word.getIncorrectCheckCounter());
         cv.put("rating", word.getRating());
 
-        Optional<Integer> afecctedRows = database.updateRow(DICTIONARY_TABLE_NAME,
+        int afecctedRows = database.updateRow(DICTIONARY_TABLE_NAME,
                 PRIMARY_COLUMN_ID, word.getId(), cv);
         return afecctedRows;
     }
@@ -112,31 +112,30 @@ public class WordRepository {
         return wordList;
     }
 
-    public Optional<Integer> incrementWordCorrectCheckCounter(Word word)
-    {
+    public int incrementWordCorrectCheckCounter(Word word) {
         ContentValues cv = new ContentValues();
         cv.put("correct_check_counter", word.getCorrectCheckCounter());
         cv.put("rating", word.getRating());
-        Optional<Integer> affectedRows = database.updateRow(DICTIONARY_TABLE_NAME,
+        int affectedRows = database.updateRow(DICTIONARY_TABLE_NAME,
                 PRIMARY_COLUMN_ID, word.getId(), cv);
         return affectedRows;
     }
 
-    public Optional<Integer> incrementWordIncorrectCheckCounter(Word word)
+    public int incrementWordIncorrectCheckCounter(Word word)
     {
         ContentValues cv = new ContentValues();
         cv.put("incorrect_check_counter", word.getIncorrectCheckCounter());
         cv.put("rating", word.getRating());
-        Optional<Integer> affectedRows = database.updateRow(DICTIONARY_TABLE_NAME,
+        int affectedRows = database.updateRow(DICTIONARY_TABLE_NAME,
                 PRIMARY_COLUMN_ID, word.getId(), cv);
         return affectedRows;
     }
 
-    public Optional<Integer> updateWordDateShowed(Word word)
+    public int updateWordDateShowed(Word word)
     {
         ContentValues cv = new ContentValues();
         cv.put("dateShowed", Instant.now().toEpochMilli());
-        Optional<Integer> affectedRows = database.updateRow(DICTIONARY_TABLE_NAME,
+        int affectedRows = database.updateRow(DICTIONARY_TABLE_NAME,
                 PRIMARY_COLUMN_ID, word.getId(), cv);
         return affectedRows;
     }
