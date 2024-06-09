@@ -33,18 +33,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
-        splashScreen.setKeepOnScreenCondition(() -> true);
-
+        SplashScreen.installSplashScreen(this);
         super.onCreate(savedInstanceState);
         wordService = ServiceSupplier.getWordService(getApplicationContext());
-
-        //Keeping logo some time before showing main page.
-        final Handler handler = new Handler();
-        handler.postDelayed(() -> {
-            splashScreen.setKeepOnScreenCondition(() -> false);
-            mainActivityProcess();
-        }, 500);
+        mainActivityProcess();
     }
 
     //Rest part that executes before main page showing.
